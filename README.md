@@ -52,6 +52,24 @@ data/
 - **Bước 2:** 21 factor theo 7 nhóm: Size (`mcap`, `log_mcap`), Value (`bm`, `ep`, `sp`, `cfp`), Momentum (`mom_12_1`, `mom_6_1`, `ret_1m`), Low-risk (`beta_12m`, `vol_3m`, `ivol_3m`, `max_ret_1m`), thanh khoản (`amihud_3m`, `turnover_3m`), Quality (`roe`, `roa`, `gross_profitability`, `leverage`, `accruals`, `earnings_growth`), Investment (`asset_growth`). Biến mục tiêu: `ret_fwd_1m` (lợi suất tháng sau).
 - **Bước 3:** với 50 mã, chia 3–5 nhóm (tercile/quintile) thay vì 10 nhóm, để mỗi nhóm có đủ số mã.
 
+**Thiết lập SSI iBoard (làm một lần, cho `download_fundamentals.py`)**
+
+Script điều khiển widget "Báo cáo tài chính" (FiinTrade) trong mục Giao diện của tôi. Widget này không có sẵn, mỗi tài khoản phải tự thêm:
+
+1. Đăng nhập [iBoard](https://iboard.ssi.com.vn), click tab **Giao diện của tôi**
+2. Click nút **+** (Thêm bảng)
+3. Chọn **Thêm bảng** trong cửa sổ vừa mở
+4. Click **Thêm tính năng**
+5. Tìm mục **Theo dõi**
+6. Chọn **Báo cáo tài chính** và kéo vào màn hình
+
+Lưu ý:
+- Bảng chứa widget phải là bảng hiện ra đầu tiên khi mở Giao diện của tôi.
+- Để iBoard ở giao diện **tiếng Việt**: script tìm nút theo chữ ("TẢI XUỐNG", "Cân Đối Kế Toán"...).
+- Cần cài Google Chrome và `playwright` (`pip install -r requirements.txt`).
+- Lần chạy đầu, cửa sổ Chrome mở trang đăng nhập: tự đăng nhập bằng tay. Phiên đăng nhập lưu ở `~/.cache/ssi-iboard-profile` (ngoài repo, chứa cookie của tài khoản giao dịch: không chia sẻ thư mục này).
+- Nếu thiếu widget hoặc giao diện không đúng, script dừng sau khoảng 30 giây và in lại các bước trên.
+
 **Chạy lại pipeline**
 
 ```bash

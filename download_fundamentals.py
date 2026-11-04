@@ -10,14 +10,15 @@ File được lưu vào ``data/raw/quarter-report/`` với tên SSI gốc và đ
 
 Yêu cầu:
     pip install playwright        # dùng Google Chrome có sẵn trên máy
-    Tài khoản SSI iBoard có widget "Báo cáo tài chính" trong Giao diện của tôi.
+    Tài khoản SSI iBoard, giao diện tiếng Việt, và widget "Báo cáo tài chính"
+    đã được thêm vào Giao diện của tôi (làm một lần, xem SETUP_HINT hoặc README).
 
 Lần chạy đầu, cửa sổ Chrome mở ra trang đăng nhập: tự đăng nhập bằng tay, script
 chờ đến khi widget hiện ra. Phiên đăng nhập được lưu ở ``~/.cache/ssi-iboard-profile``
 (ngoài repo) nên các lần sau không cần đăng nhập lại.
 
 Chạy:
-    python3 download_fundamentals.py                       # 30 mã trong universe.csv
+    python3 download_fundamentals.py                       # toàn bộ mã trong universe.csv
     python3 download_fundamentals.py --symbols ACB DGC     # vài mã
     python3 download_fundamentals.py --years 2026 2022 --force
 """
@@ -32,6 +33,7 @@ from pathlib import Path
 
 import pandas as pd
 from playwright.sync_api import BrowserContext, FrameLocator, Page, sync_playwright
+from playwright.sync_api import TimeoutError as PlaywrightTimeout
 
 
 PROJECT_DIR = Path(__file__).resolve().parent
@@ -49,7 +51,22 @@ TABS = {
 DEFAULT_YEARS = [pd.Timestamp.today().year, pd.Timestamp.today().year - 4]
 N_PERIODS = "15"
 PAUSE = 2.0  # giây nghỉ sau mỗi thao tác tải dữ liệu, tránh dồn yêu cầu lên server
-LOGIN_TIMEOUT_MS = 10 * 60 * 1000
+LOGIN_TIMEOUT = 10 * 60  # giây chờ người dùng đăng nhập
+WIDGET_TIMEOUT = 30  # giây chờ widget hiện ra sau khi đã đăng nhập
+SETUP_HINT = """\
+Không thấy widget "Báo cáo tài chính" trong Giao diện của tôi. Cài đặt một lần:
+  1. Click tab "Giao diện của tôi"
+  2. Click nút "+" (Thêm bảng)
+  3. Chọn "Thêm bảng" trong cửa sổ vừa mở
+  4. Click "Thêm tính năng"
+  5. Tìm mục "Theo dõi"
+  6. Chọn "Báo cáo tài chính" và kéo vào màn hình
+Để bảng chứa widget là bảng hiện ra đầu tiên khi mở Giao diện của tôi, và để
+giao diện iBoard bằng tiếng Việt. Sau đó chạy lại script."""
+
+
+class SetupError(RuntimeError):
+    """Board iBoard chưa được cài đặt đúng để script chạy."""
 PERIOD_PATTERN = re.compile(r"^Q[1-4] (\d{4})$")
 
 
@@ -61,12 +78,53 @@ def open_widget(page: Page) -> FrameLocator:
     """Mở Giao diện của tôi, chờ đăng nhập (nếu cần) đến khi widget BCTC hiện ra."""
 
     page.goto(DASHBOARD_URL)
+    iframe = page.locator(WIDGET_IFRAME)
+    deadline = time.monotonic() + LOGIN_TIMEOUT
+    on_dashboard_since = None
+    asked_login = False
+    while iframe.count() == 0:
+        now = time.monotonic()
+        if "/auth/login" in page.url:
+            on_dashboard_since = None
+            if not asked_login:
+                print("Chưa đăng nhập: hãy đăng nhập SSI iBoard trong cửa sổ Chrome vừa mở...")
+                asked_login = True
+            if now > deadline:
+                raise SetupError("Hết thời gian chờ đăng nhập.")
+        elif "/dynamic-dashboard" not in page.url:
+            # Đăng nhập xong iBoard thường chuyển về trang chủ: mở lại Giao diện của tôi.
+            on_dashboard_since = None
+            page.goto(DASHBOARD_URL)
+            continue
+        elif on_dashboard_since is None:
+            on_dashboard_since = now
+        elif now - on_dashboard_since > WIDGET_TIMEOUT:
+            raise SetupError(SETUP_HINT)
+        page.wait_for_timeout(1000)
+
     widget = page.frame_locator(WIDGET_IFRAME)
-    if "/auth/login" in page.url:
-        print("Chưa đăng nhập: hãy đăng nhập SSI iBoard trong cửa sổ Chrome vừa mở...")
-        page.wait_for_url(re.compile(r"/dynamic-dashboard"), timeout=LOGIN_TIMEOUT_MS)
-    widget.get_by_text("TẢI XUỐNG").wait_for(timeout=LOGIN_TIMEOUT_MS)
+    check_widget(widget)
     return widget
+
+
+def check_widget(widget: FrameLocator) -> None:
+    """Kiểm tra widget có đủ 3 tab, 3 dropdown và nút Tải xuống (giao diện tiếng Việt)."""
+
+    timeout_ms = WIDGET_TIMEOUT * 1000
+    try:
+        widget.get_by_text("TẢI XUỐNG").wait_for(timeout=timeout_ms)
+    except PlaywrightTimeout:
+        raise SetupError(
+            "Widget đã hiện nhưng không thấy nút \"TẢI XUỐNG\". "
+            "Hãy chuyển iBoard sang giao diện tiếng Việt rồi chạy lại."
+        ) from None
+    missing = [tab for tab in TABS if widget.locator("a.m-tabs__link", has_text=tab).count() == 0]
+    n_dropdowns = widget.locator("button.drop-cus").count()
+    if missing or n_dropdowns < 3:
+        raise SetupError(
+            f"Widget không đúng cấu trúc mong đợi (thiếu tab: {missing or 'không'}, "
+            f"số dropdown: {n_dropdowns}/3). Có thể SSI đã đổi giao diện; cần cập nhật selector."
+        )
 
 
 def choose(page: Page, widget: FrameLocator, index: int, value: str) -> None:
@@ -172,11 +230,17 @@ def main() -> None:
     with sync_playwright() as playwright:
         context = launch(playwright)
         page = context.pages[0] if context.pages else context.new_page()
-        widget = open_widget(page)
+        try:
+            widget = open_widget(page)
+        except SetupError as exc:
+            context.close()
+            sys.exit(f"\n{exc}")
         for i, symbol in enumerate(symbols, 1):
             print(f"[{i}/{len(symbols)}] {symbol}")
             try:
                 download_symbol(page, widget, symbol, args.years, args.out_dir, args.force)
+            except SetupError:
+                raise
             except Exception as exc:  # một mã lỗi thì ghi lại rồi chạy tiếp mã sau
                 print(f"  LỖI {symbol}: {exc}")
                 failed.append(symbol)
