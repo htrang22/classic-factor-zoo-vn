@@ -43,6 +43,17 @@ ITEM_MAP = {
         "net_income": ("income_statement", "Cổ đông của Công ty mẹ"),
         "cfo": ("cash_flow", "Lưu chuyển tiền thuần từ các hoạt động sản xuất kinh doanh"),
     },
+    # Mẫu công ty chứng khoán (SSI, SHS, MBS). Vốn chủ sở hữu ở mẫu này đã bằng
+    # Tổng tài sản − Nợ phải trả nên không trừ lợi ích cổ đông thiểu số.
+    "broker": {
+        "total_assets": ("balance_sheet", "TỔNG CỘNG TÀI SẢN"),
+        "total_liabilities": ("balance_sheet", "NỢ PHẢI TRẢ"),
+        "equity": ("balance_sheet", "VỐN CHỦ SỞ HỮU"),
+        "charter_capital": ("balance_sheet", "Vốn góp"),
+        "revenue": ("income_statement", "Doanh thu thuần về hoạt động kinh doanh"),
+        "net_income": ("income_statement", "Lợi nhuận sau thuế phân bổ cho chủ sở hữu"),
+        "cfo": ("cash_flow", "Lưu chuyển thuần từ hoạt động kinh doanh chứng khoán"),
+    },
     "corporate": {
         "total_assets": ("balance_sheet", "TỔNG TÀI SẢN"),
         "total_liabilities": ("balance_sheet", "NỢ PHẢI TRẢ"),
@@ -56,8 +67,12 @@ ITEM_MAP = {
     },
 }
 FLOW_ITEMS = ["revenue", "gross_profit", "net_income", "cfo"]
-# Nhận diện mẫu ngân hàng qua một chỉ tiêu chỉ ngân hàng có.
-BANK_MARKER = ("income_statement", "Tổng thu nhập hoạt động")
+# Nhận diện mẫu BCTC qua một chỉ tiêu chỉ mẫu đó có.
+TEMPLATE_MARKERS = {
+    "bank": ("income_statement", "Tổng thu nhập hoạt động"),
+    "broker": ("income_statement", "Doanh thu thuần về hoạt động kinh doanh"),
+}
+FINANCIAL_TEMPLATES = {"bank", "broker"}
 
 
 # --------------------------------------------------------------------------- #
@@ -68,10 +83,14 @@ def extract_items(fund: pd.DataFrame) -> pd.DataFrame:
 
     rows = []
     for symbol, group in fund.groupby("symbol"):
-        has_marker = (
-            (group["statement"] == BANK_MARKER[0]) & (group["item"] == BANK_MARKER[1])
-        ).any()
-        template = "bank" if has_marker else "corporate"
+        template = next(
+            (
+                name
+                for name, (statement, item) in TEMPLATE_MARKERS.items()
+                if ((group["statement"] == statement) & (group["item"] == item)).any()
+            ),
+            "corporate",
+        )
         out = pd.DataFrame(index=pd.PeriodIndex(sorted(group["period"].unique()), freq="Q"))
         for name, (statement, item) in ITEM_MAP[template].items():
             match = group[(group["statement"] == statement) & (group["item"] == item)]
@@ -85,7 +104,8 @@ def extract_items(fund: pd.DataFrame) -> pd.DataFrame:
         out = out.reindex(pd.period_range(out.index.min(), out.index.max(), freq="Q"))
         out.index.name = "period"
         out = out.reset_index()
-        out.insert(0, "is_bank", template == "bank")
+        out.insert(0, "is_financial", template in FINANCIAL_TEMPLATES)
+        out.insert(0, "template", template)
         out.insert(0, "symbol", symbol)
         rows.append(out)
     return pd.concat(rows, ignore_index=True)
@@ -97,7 +117,7 @@ def fundamental_ratios(items: pd.DataFrame) -> pd.DataFrame:
     frames = []
     for _, g in items.groupby("symbol"):
         g = g.sort_values("period").copy()
-        for col in ["gross_profit"]:
+        for col in ["gross_profit", "minority"]:
             if col not in g:
                 g[col] = np.nan
         g["book_equity"] = g["equity"] - g["minority"].fillna(0)
@@ -116,9 +136,9 @@ def fundamental_ratios(items: pd.DataFrame) -> pd.DataFrame:
         g["asset_growth"] = g["total_assets"] / assets_lag4 - 1
         g["earnings_growth"] = (g["net_income_ttm"] - ni_ttm_lag4) / ni_ttm_lag4.abs()
         g["accruals"] = (g["net_income_ttm"] - g["cfo_ttm"]) / g["total_assets"]
-        # CFO của ngân hàng gồm biến động tiền gửi/cho vay nên không phản ánh
-        # chất lượng lợi nhuận; bỏ accruals cho nhóm này.
-        g.loc[g["is_bank"], "accruals"] = np.nan
+        # CFO của ngân hàng/CTCK gồm biến động tiền gửi, cho vay, margin và tự
+        # doanh nên không phản ánh chất lượng lợi nhuận; bỏ accruals cho nhóm này.
+        g.loc[g["is_financial"], "accruals"] = np.nan
         frames.append(g)
 
     data = pd.concat(frames, ignore_index=True)
@@ -212,7 +232,7 @@ def attach_fundamentals(panel: pd.DataFrame, fund: pd.DataFrame) -> pd.DataFrame
     """Gắn BCTC mới nhất đã công bố tại mỗi cuối tháng (merge_asof theo ngày)."""
 
     cols = [
-        "symbol", "available_date", "period", "is_bank", "book_equity", "shares",
+        "symbol", "available_date", "period", "template", "is_financial", "book_equity", "shares",
         "revenue_ttm", "net_income_ttm", "cfo_ttm", "roe", "roa",
         "gross_profitability", "leverage", "asset_growth", "earnings_growth", "accruals",
     ]
@@ -232,13 +252,13 @@ def attach_fundamentals(panel: pd.DataFrame, fund: pd.DataFrame) -> pd.DataFrame
     merged["ep"] = merged["net_income_ttm"] / merged["mcap"]
     merged["sp"] = merged["revenue_ttm"] / merged["mcap"]
     merged["cfp"] = merged["cfo_ttm"] / merged["mcap"]
-    merged.loc[merged["is_bank"].eq(True), "cfp"] = np.nan
+    merged.loc[merged["is_financial"].eq(True), "cfp"] = np.nan
     merged["turnover_3m"] = merged["volume_3m"] / merged["symbol"].map(latest_shares)
     return merged
 
 
 OUTPUT_COLUMNS = [
-    "date", "symbol", "exchange", "sector", "is_bank", "fiscal_quarter",
+    "date", "symbol", "exchange", "sector", "template", "is_financial", "fiscal_quarter",
     "n_trading_days", "ret_1m", "ret_fwd_1m", "mkt_ret_1m",
     # Size
     "mcap", "log_mcap",
