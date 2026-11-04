@@ -1,0 +1,4 @@
+pandas
+numpy
+--extra-index-url https://vnstocks.com/api/simple
+vnstock
