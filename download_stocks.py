@@ -29,7 +29,7 @@ BENCHMARK_SYMBOL = "VNINDEX"
 DEFAULT_END = pd.Timestamp.today().normalize()
 DEFAULT_START = DEFAULT_END - pd.DateOffset(years=8) + pd.Timedelta(days=1)
 
-# Rổ 30 mã trải đều vốn hóa lớn/vừa/nhỏ và nhiều ngành để các factor
+# Rổ 50 mã trải đều vốn hóa lớn/vừa/nhỏ và nhiều ngành để các factor
 # (đặc biệt là Size, Value) có độ phân tán. Lưu ý: danh sách chọn theo hiện tại
 # nên còn survivorship bias, sẽ xử lý ở bước làm sạch dữ liệu.
 UNIVERSE = {
@@ -69,6 +69,31 @@ UNIVERSE = {
     "PVS": ("HNX", "Năng lượng"),
     "IDC": ("HNX", "Bất động sản KCN"),
     "CEO": ("HNX", "Bất động sản"),
+    # --- Mở rộng lên 50 mã (giữ tỷ lệ ~85% HOSE, ~1/3 tài chính) ---
+    # HOSE - Ngân hàng
+    "STB": ("HOSE", "Ngân hàng"),
+    "HDB": ("HOSE", "Ngân hàng"),
+    "TPB": ("HOSE", "Ngân hàng"),
+    "EIB": ("HOSE", "Ngân hàng"),
+    # HOSE - Chứng khoán
+    "VND": ("HOSE", "Chứng khoán"),
+    "HCM": ("HOSE", "Chứng khoán"),
+    # HOSE - Doanh nghiệp thường
+    "NLG": ("HOSE", "Bất động sản"),
+    "KBC": ("HOSE", "Bất động sản KCN"),
+    "VJC": ("HOSE", "Hàng không"),
+    "DPM": ("HOSE", "Phân bón"),
+    "DHG": ("HOSE", "Dược phẩm"),
+    "VHC": ("HOSE", "Thủy sản"),
+    "CTD": ("HOSE", "Xây dựng"),
+    "PC1": ("HOSE", "Xây lắp điện"),
+    "PVD": ("HOSE", "Dịch vụ dầu khí"),
+    "BMP": ("HOSE", "Nhựa"),
+    "DRC": ("HOSE", "Cao su"),
+    # HNX
+    "VCS": ("HNX", "Vật liệu xây dựng"),
+    "TNG": ("HNX", "Dệt may"),
+    "PLC": ("HNX", "Hóa chất"),
 }
 
 
