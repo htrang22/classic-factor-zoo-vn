@@ -72,15 +72,17 @@ Tiêu chí chọn: trải đều vốn hóa lớn/vừa/nhỏ và nhiều ngành
   được **30 quý liên tục từ 2019Q2 đến 2026Q3**, không thiếu quý.
 - Số liệu tính bằng **đồng**, theo **từng quý** (không cộng dồn từ đầu năm).
 - Không có **ngày công bố** → point-in-time dùng độ trễ giả định 45 ngày.
-- Mẫu ngân hàng (48/27/52 chỉ tiêu) khác mẫu doanh nghiệp thường (120 chỉ
-  tiêu ở bảng cân đối của VIC). Một số chỉ tiêu trùng tên (ròng/gộp), nên
-  phân biệt bằng `line_no`.
+- Có 3 mẫu BCTC, số chỉ tiêu (CĐKT/KQKD/LCTT) khác nhau:
+  - **Ngân hàng** (7 mã: VCB, BID, CTG, TCB, MBB, ACB, VPB): 48/27/52.
+  - **Công ty chứng khoán** (3 mã: SSI, SHS, MBS): 161/85/98.
+  - **Doanh nghiệp thường** (20 mã còn lại): 120 chỉ tiêu ở bảng cân đối.
+- Một số chỉ tiêu trùng tên (ròng/gộp), nên phân biệt bằng `line_no`.
 - Cột EPS bằng 0 ở mọi quý (lỗi nguồn)
 
 **Panel factor (`data/final/factor_panel.csv`)**
 - 2.880 dòng = 30 mã × 96 tháng, từ 11/2018 đến 10/2026 (bỏ tháng 11/2026
   vì chưa kết thúc).
-- 31 cột: 10 cột định danh/lợi suất + 21 chỉ số factor.
+- 32 cột: 11 cột định danh/lợi suất + 21 chỉ số factor.
 ---
 
 ## 2. Các factor đã tính
@@ -97,21 +99,26 @@ Tiêu chí chọn: trải đều vốn hóa lớn/vừa/nhỏ và nhiều ngành
 - **TTM (12 tháng gần nhất):** tổng 4 quý liên tiếp gần nhất của chỉ tiêu dòng
   (doanh thu, lợi nhuận, CFO, lãi gộp).
 - **Số cổ phiếu:** `shares = Vốn điều lệ / 10.000` (mệnh giá 10.000 đồng).
-- **Vốn chủ sở hữu sổ sách:** `book_equity = Vốn chủ sở hữu − Lợi ích cổ đông thiểu số`.
+- **Vốn chủ sở hữu sổ sách:** `book_equity = Vốn chủ sở hữu − Lợi ích cổ đông thiểu số`
+  (mẫu công ty chứng khoán không trừ, vì Vốn chủ sở hữu đã bằng Tổng tài sản − Nợ phải trả).
 
 Chỉ tiêu BCTC được lấy theo tên dòng:
 
-| Biến | Mẫu ngân hàng | Mẫu doanh nghiệp |
-|---|---|---|
-| Tổng tài sản `TA` | TỔNG TÀI SẢN | TỔNG TÀI SẢN |
-| Tổng nợ `TL` | Tổng nợ phải trả | NỢ PHẢI TRẢ |
-| Vốn chủ sở hữu | Vốn chủ sở hữu | VỐN CHỦ SỞ HỮU |
-| Lợi ích CĐ thiểu số | Lợi ích của cổ đông thiểu số | Lợi ích cổ đông không kiểm soát |
-| Vốn điều lệ | Vốn điều lệ | Vốn góp |
-| Doanh thu `Rev` | Tổng thu nhập hoạt động | Doanh số thuần |
-| Lãi gộp `GP` | – | Lãi gộp |
-| LNST cổ đông mẹ `NI` | Cổ đông của Công ty mẹ | Lợi nhuận của Cổ đông của Công ty mẹ |
-| CFO | Lưu chuyển tiền thuần từ các hoạt động sản xuất kinh doanh | (như bên trái) |
+| Biến | Mẫu ngân hàng (`bank`) | Mẫu công ty chứng khoán (`broker`) | Mẫu doanh nghiệp (`corporate`) |
+|---|---|---|---|
+| Tổng tài sản `TA` | TỔNG TÀI SẢN | TỔNG CỘNG TÀI SẢN | TỔNG TÀI SẢN |
+| Tổng nợ `TL` | Tổng nợ phải trả | NỢ PHẢI TRẢ | NỢ PHẢI TRẢ |
+| Vốn chủ sở hữu | Vốn chủ sở hữu | VỐN CHỦ SỞ HỮU | VỐN CHỦ SỞ HỮU |
+| Lợi ích CĐ thiểu số | Lợi ích của cổ đông thiểu số | – | Lợi ích cổ đông không kiểm soát |
+| Vốn điều lệ | Vốn điều lệ | Vốn góp | Vốn góp |
+| Doanh thu `Rev` | Tổng thu nhập hoạt động | Doanh thu thuần về hoạt động kinh doanh | Doanh số thuần |
+| Lãi gộp `GP` | – | – | Lãi gộp |
+| LNST cổ đông mẹ `NI` | Cổ đông của Công ty mẹ | Lợi nhuận sau thuế phân bổ cho chủ sở hữu | Lợi nhuận của Cổ đông của Công ty mẹ |
+| CFO | Lưu chuyển tiền thuần từ các hoạt động sản xuất kinh doanh | Lưu chuyển thuần từ hoạt động kinh doanh chứng khoán | Lưu chuyển tiền thuần từ các hoạt động sản xuất kinh doanh |
+
+Mẫu BCTC được nhận diện tự động: có "Tổng thu nhập hoạt động" → ngân hàng; có
+"Doanh thu thuần về hoạt động kinh doanh" → công ty chứng khoán; còn lại →
+doanh nghiệp thường.
 
 ### 2.2 Cột định danh và lợi suất
 
@@ -119,7 +126,8 @@ Chỉ tiêu BCTC được lấy theo tên dòng:
 |---|---|
 | `date` | Ngày cuối tháng |
 | `symbol`, `exchange`, `sector` | Mã, sàn, ngành |
-| `is_bank` | `True` nếu BCTC theo mẫu ngân hàng |
+| `template` | Mẫu BCTC: `bank`, `broker` hoặc `corporate` (trống khi chưa có BCTC đã công bố) |
+| `is_financial` | `True` nếu là ngân hàng hoặc công ty chứng khoán |
 | `fiscal_quarter` | Quý BCTC đang được dùng tại `date` (theo point-in-time) |
 | `n_trading_days` | Số phiên giao dịch trong tháng (dùng để lọc mã bị đình chỉ) |
 | `ret_1m` | `P_t / P_{t−1} − 1` |
@@ -135,7 +143,7 @@ Chỉ tiêu BCTC được lấy theo tên dòng:
 | **Value** | `bm` | `book_equity / mcap` | Book-to-market, FF HML |
 | | `ep` | `NI_TTM / mcap` | Earnings yield (nghịch đảo P/E) |
 | | `sp` | `Rev_TTM / mcap` | Sales-to-price |
-| | `cfp` | `CFO_TTM / mcap` | Chỉ doanh nghiệp thường (ngân hàng = trống) |
+| | `cfp` | `CFO_TTM / mcap` | Chỉ doanh nghiệp thường (`is_financial` = trống) |
 | **Momentum** | `mom_12_1` | `P_{t−1} / P_{t−12} − 1` | Carhart; bỏ tháng gần nhất |
 | | `mom_6_1` | `P_{t−1} / P_{t−6} − 1` | Momentum trung hạn |
 | | `ret_1m` | `P_t / P_{t−1} − 1` | Dùng làm factor short-term reversal |
@@ -149,7 +157,7 @@ Chỉ tiêu BCTC được lấy theo tên dòng:
 | | `roa` | `NI_TTM / TA_q` | |
 | | `gross_profitability` | `GP_TTM / TA_q` | Novy-Marx; chỉ doanh nghiệp thường |
 | | `leverage` | `TL_q / TA_q` | QMJ – safety |
-| | `accruals` | `(NI_TTM − CFO_TTM) / TA_q` | Sloan; chỉ doanh nghiệp thường |
+| | `accruals` | `(NI_TTM − CFO_TTM) / TA_q` | Sloan; chỉ doanh nghiệp thường (`is_financial` = trống) |
 | | `earnings_growth` | `(NI_TTM − NI_TTM,q−4) / |NI_TTM,q−4|` | QMJ – growth |
 | **Investment** | `asset_growth` | `TA_q / TA_{q−4} − 1` | FF5 CMA |
 
