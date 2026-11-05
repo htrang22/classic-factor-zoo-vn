@@ -3,7 +3,6 @@ __pycache__/
 *.pyc
 .DS_Store
 
-# Dữ liệu gốc (vnstock, SSI/FiinTrade) và dữ liệu suy ra được từ đó không có quyền phân phối: chỉ giữ ở máy.
 data/raw/
 data/final/
 data/processed/*
