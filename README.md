@@ -8,18 +8,18 @@ Fama-French 3/5 factor, Carhart momentum, Betting-Against-Beta, Quality-minus-Ju
 
 ## Data:
 
-**Rổ cổ phiếu:** 30 mã (25 HOSE + 5 HNX), trải đều vốn hóa lớn/vừa/nhỏ và nhiều ngành: 7 ngân hàng, 3 công ty chứng khoán, 20 doanh nghiệp thường. Benchmark: VN-Index.
+**Rổ cổ phiếu:** 50 mã (42 HOSE + 8 HNX), trải đều vốn hóa lớn/vừa/nhỏ và nhiều ngành: 11 ngân hàng, 5 công ty chứng khoán, 34 doanh nghiệp thường. Không có mã bảo hiểm (mẫu BCTC riêng, chưa xử lý). Benchmark: VN-Index.
 
 | Dữ liệu | Nguồn | Giai đoạn |
 |---|---|---|
 | Giá OHLCV ngày, đã điều chỉnh cổ tức và chia tách (nghìn đồng) | vnstock, nguồn KBS (bản cộng đồng, tối đa 8 năm) | 11/2018 → 11/2026 |
 | VN-Index | vnstock, nguồn KBS | 11/2018 → 11/2026 |
-| BCTC quý: bảng cân đối, kết quả kinh doanh, lưu chuyển tiền tệ (đồng) | SSI iBoard, dữ liệu FiinTrade (xuất file Excel thủ công) | 2019Q2 → 2026Q3 (30 quý) |
+| BCTC quý: bảng cân đối, kết quả kinh doanh, lưu chuyển tiền tệ (đồng) | SSI iBoard, dữ liệu FiinTrade (xuất file Excel, tự động bằng `download_fundamentals.py`) | 2019Q2 → 2026Q3 (30 quý) |
 
 - BCTC có 3 mẫu khác nhau (ngân hàng, công ty chứng khoán, doanh nghiệp thường); `compute_factors.py` tự nhận diện mẫu và quy đổi về cùng bộ chỉ tiêu: tổng tài sản, nợ, vốn chủ, vốn điều lệ, doanh thu, lãi gộp, LNST cổ đông mẹ, CFO.
 - Vốn hóa = giá đã điều chỉnh × số cổ phiếu mới nhất (vốn điều lệ / 10.000 đồng).
 - **Point-in-time:** nguồn dữ liệu không có ngày công bố BCTC, nên số liệu quý chỉ được dùng từ **ngày kết thúc quý + 45 ngày** (hạn công bố BCTC quý theo Thông tư 96/2020 là 20–30 ngày) để tránh look-ahead bias.
-- **Quyền dữ liệu:** dữ liệu gốc (`data/raw/`) và bản đã chuyển định dạng (`data/processed/fundamentals_long.csv`) chỉ lưu ở máy, không đưa lên GitHub vì không có quyền phân phối lại. Repo chỉ chứa code, `data/final/` (các chỉ số đã tính) và `data/processed/fundamentals_coverage.csv` (báo cáo độ phủ BCTC, không chứa số liệu gốc).
+- **Quyền dữ liệu:** dữ liệu gốc (`data/raw/`), bản đã chuyển định dạng (`data/processed/fundamentals_long.csv`) và panel factor (`data/final/`, vì từ panel dựng lại được giá và số liệu BCTC) chỉ lưu ở máy, không đưa lên GitHub vì không có quyền phân phối lại. Repo chỉ chứa code, tài liệu, `data/processed/fundamentals_coverage.csv` (báo cáo độ phủ BCTC, không chứa số liệu gốc) và kết quả đã tổng hợp qua nhiều mã. Repo từng bị xóa và tạo lại để gỡ panel khỏi lịch sử public, xem [nhật ký dự án](notes/project-log.md#3-xóa-và-tạo-lại-repo-112026).
 
 **Cấu trúc dữ liệu**
 
@@ -27,14 +27,14 @@ Fama-French 3/5 factor, Carhart momentum, Betting-Against-Beta, Quality-minus-Ju
 data/
 ├── raw/                 # chỉ ở máy
 │   ├── prices/          # giá ngày từng mã
-│   ├── prices_all.csv   # giá ngày gộp 30 mã
+│   ├── prices_all.csv   # giá ngày gộp 50 mã
 │   ├── vnindex.csv
 │   ├── universe.csv     # mã, sàn, ngành
 │   └── quarter-report/  # file Excel BCTC từ SSI iBoard
 ├── processed/
 │   ├── fundamentals_long.csv      # chỉ ở máy
 │   └── fundamentals_coverage.csv  # số quý BCTC theo mã × loại báo cáo
-└── final/
+└── final/               # chỉ ở máy
     └── factor_panel.csv # input của model: mã × cuối tháng, 21 factor
 ```
 
@@ -42,25 +42,59 @@ data/
 
 | # | Bước | Trạng thái | Script |
 |---|---|---|---|
-| 0 | Thu thập dữ liệu: giá, VN-Index, BCTC quý cho 30 mã | ✅ Xong | `download_stocks.py`, `parse_fundamentals.py` |
+| 0 | Thu thập dữ liệu: giá, VN-Index, BCTC quý cho 50 mã | ✅ Xong | `download_stocks.py`, `download_fundamentals.py`, `parse_fundamentals.py` |
 | 1 | Làm sạch data, xử lý cổ phiếu bị đình chỉ/hủy niêm yết (survivorship bias) | ⏳ Chưa làm | – |
 | 2 | Tính 10-20 factor đơn lẻ | ✅ Xong (21 factor) | `compute_factors.py` |
-| 3 | Sắp xếp cổ phiếu vào nhóm (quantile) theo từng factor, tính lợi suất từng nhóm | ⏳ Chưa làm | – |
+| 3 | Sắp xếp cổ phiếu vào nhóm (quintile) theo từng factor, tính lợi suất từng nhóm | ⏳ Chưa làm | – |
 | 4 | Đánh giá: IC (Spearman rank correlation giữa factor và lợi suất kỳ sau), spread long-short, t-stat | ⏳ Chưa làm | – |
 | 5 | Kiểm định bằng hồi quy Fama-MacBeth | ⏳ Chưa làm | – |
 
-- **Bước 2:** 21 factor theo 7 nhóm: Size (`mcap`, `log_mcap`), Value (`bm`, `ep`, `sp`, `cfp`), Momentum (`mom_12_1`, `mom_6_1`, `ret_1m`), Low-risk (`beta_12m`, `vol_3m`, `ivol_3m`, `max_ret_1m`), thanh khoản (`amihud_3m`, `turnover_3m`), Quality (`roe`, `roa`, `gross_profitability`, `leverage`, `accruals`, `earnings_growth`), Investment (`asset_growth`). Biến mục tiêu: `ret_fwd_1m` (lợi suất tháng sau).
-- **Bước 3:** với 30 mã, chia 3–5 nhóm (tercile/quintile) thay vì 10 nhóm, để mỗi nhóm có đủ số mã.
+**Bước 2:** 21 factor theo 7 nhóm:
+  1. Size (`mcap`, `log_mcap`),
+  2. Value (`bm`, `ep`, `sp`, `cfp`);
+  3. Momentum (`mom_12_1`, `mom_6_1`, `ret_1m`)
+  4. Low-risk (`beta_12m`, `vol_3m`, `ivol_3m`, `max_ret_1m`),
+  5. Thanh khoản (`amihud_3m`, `turnover_3m`),
+  6. Quality (`roe`, `roa`, `gross_profitability`, `leverage`, `accruals`, `earnings_growth`),
+  7. Investment (`asset_growth`).
+Biến mục tiêu: `ret_fwd_1m` (lợi suất tháng sau).
+
+**Bước 3:** với 50 mã, chia 3–5 nhóm (tercile/quintile) thay vì 10 nhóm, để mỗi nhóm có đủ số mã.
+
+**Thiết lập SSI iBoard (làm một lần, cho `download_fundamentals.py`)**
+
+Script điều khiển widget "Báo cáo tài chính" (FiinTrade) trong mục Giao diện của tôi. Widget này không có sẵn, mỗi tài khoản phải tự thêm:
+
+1. Đăng nhập [iBoard](https://iboard.ssi.com.vn), click tab **Giao diện của tôi**
+2. Click nút **+** (Thêm bảng)
+3. Chọn **Thêm bảng** trong cửa sổ vừa mở
+4. Click **Thêm tính năng**
+5. Tìm mục **Theo dõi**
+6. Chọn **Báo cáo tài chính** và kéo vào màn hình
+
+Lưu ý:
+- Bảng chứa widget phải là bảng hiện ra đầu tiên khi mở Giao diện của tôi.
+- Để iBoard ở giao diện **tiếng Việt**: script tìm nút theo chữ ("TẢI XUỐNG", "Cân Đối Kế Toán"...).
+- Cần cài Google Chrome và `playwright` (`pip install -r requirements.txt`).
+- Lần chạy đầu, cửa sổ Chrome mở trang đăng nhập: tự đăng nhập bằng tay. Phiên đăng nhập lưu ở `~/.cache/ssi-iboard-profile` (ngoài repo, chứa cookie của tài khoản giao dịch: không chia sẻ thư mục này).
+- Nếu thiếu widget hoặc giao diện không đúng, script dừng sau khoảng 30 giây và in lại các bước trên.
 
 **Chạy lại pipeline**
 
 ```bash
-python3 download_stocks.py      # tải giá 30 mã + VN-Index (gọi vnstock, chậm)
+python3 download_stocks.py      # tải giá 50 mã + VN-Index (gọi vnstock, chậm)
+python3 download_fundamentals.py  # tải BCTC quý từ SSI iBoard (mở Chrome; lần đầu tự đăng nhập)
 python3 parse_fundamentals.py   # gộp file Excel BCTC trong data/raw/quarter-report/
 python3 compute_factors.py      # tính panel factor -> data/final/factor_panel.csv
 ```
 
 Mỗi lần chạy, các script xử lý lại toàn bộ dữ liệu và ghi đè file đầu ra.
+
+**Giới hạn tái lập**
+
+- **Cần tài khoản SSI iBoard:** dữ liệu không được phân phối lại nên người chạy lại phải tự tải. `download_fundamentals.py` thay phần tải tay, nhưng vẫn cần tài khoản, tự đăng nhập và thêm widget một lần.
+- **Kết quả đổi theo ngày chạy:** mặc định, `download_stocks.py` lấy 8 năm tính đến hôm nay và `download_fundamentals.py` lấy năm hiện tại cùng năm đó trừ 4. Dùng `--start`, `--end` và `--years` để cố định giai đoạn, nhưng nguồn dữ liệu vẫn có thể điều chỉnh số cũ (giá điều chỉnh theo cổ tức, BCTC điều chỉnh), và bản vnstock cộng đồng chỉ lấy tối đa 8 năm.
+- **Phụ thuộc giao diện SSI:** script tìm nút theo chữ tiếng Việt và cấu trúc trang, nên có thể hỏng khi SSI đổi giao diện. Khi đó script dừng và báo lỗi. Vẫn có thể tải tay từ widget, giữ nguyên tên file SSI rồi chạy tiếp từ `parse_fundamentals.py`.
 
 ## Output:
 
