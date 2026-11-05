@@ -19,7 +19,7 @@ Fama-French 3/5 factor, Carhart momentum, Betting-Against-Beta, Quality-minus-Ju
 - BCTC có 3 mẫu khác nhau (ngân hàng, công ty chứng khoán, doanh nghiệp thường); `compute_factors.py` tự nhận diện mẫu và quy đổi về cùng bộ chỉ tiêu: tổng tài sản, nợ, vốn chủ, vốn điều lệ, doanh thu, lãi gộp, LNST cổ đông mẹ, CFO.
 - Vốn hóa = giá đã điều chỉnh × số cổ phiếu mới nhất (vốn điều lệ / 10.000 đồng).
 - **Point-in-time:** nguồn dữ liệu không có ngày công bố BCTC, nên số liệu quý chỉ được dùng từ **ngày kết thúc quý + 45 ngày** (hạn công bố BCTC quý theo Thông tư 96/2020 là 20–30 ngày) để tránh look-ahead bias.
-- **Quyền dữ liệu:** dữ liệu gốc (`data/raw/`), bản đã chuyển định dạng (`data/processed/fundamentals_long.csv`) và panel factor (`data/final/`, vì từ panel dựng lại được giá và số liệu BCTC) chỉ lưu ở máy, không đưa lên GitHub vì không có quyền phân phối lại. Repo chỉ chứa code, tài liệu, `data/processed/fundamentals_coverage.csv` (báo cáo độ phủ BCTC, không chứa số liệu gốc) và kết quả đã tổng hợp qua nhiều mã.
+- **Quyền dữ liệu:** dữ liệu gốc (`data/raw/`), bản đã chuyển định dạng (`data/processed/fundamentals_long.csv`) và panel factor (`data/final/`, vì từ panel dựng lại được giá và số liệu BCTC) chỉ lưu ở máy, không đưa lên GitHub vì không có quyền phân phối lại. Repo chỉ chứa code, tài liệu, `data/processed/fundamentals_coverage.csv` (báo cáo độ phủ BCTC, không chứa số liệu gốc) và kết quả đã tổng hợp qua nhiều mã. Repo từng bị xóa và tạo lại để gỡ panel khỏi lịch sử public, xem [nhật ký dự án](notes/project-log.md#3-xóa-và-tạo-lại-repo-112026).
 
 **Cấu trúc dữ liệu**
 

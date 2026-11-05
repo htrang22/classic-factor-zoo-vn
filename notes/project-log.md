@@ -112,7 +112,7 @@ bảo hiểm vì BCTC bảo hiểm là mẫu thứ tư, `compute_factors.py` ch�
   `IndexError` khi sort); đã nâng lên numpy 2.3.5. Panel 30 mã cũ tính lại
   trùng khớp hoàn toàn, nên kết quả trước đó không bị ảnh hưởng.
 
-**Panel factor (`data/final/factor_panel.csv`)**
+**Panel factor (`data/final/factor_panel.csv`, chỉ lưu ở máy)**
 - 4.800 dòng = 50 mã × 96 tháng, từ 11/2018 đến 10/2026 (bỏ tháng 11/2026
   vì chưa kết thúc).
 - 32 cột: 11 cột định danh/lợi suất + 21 chỉ số factor.
@@ -195,3 +195,21 @@ doanh nghiệp thường.
 | **Investment** | `asset_growth` | `TA_q / TA_{q−4} − 1` | FF5 CMA |
 
 Tổng cộng **21 chỉ số factor**.
+
+---
+
+## 3. Xóa và tạo lại repo (11/2026)
+
+Trong khoảng 04–05/11/2026, repo public có chứa `data/final/factor_panel.csv`.
+File này không chứa giá gốc, nhưng từ `ret_1m`, `mcap` và các tỷ lệ như `bm`,
+`ep`, `sp`, `cfp` có thể dựng lại đường giá và số liệu BCTC. Dữ liệu vnstock và
+FiinTrade không có quyền phân phối lại, nên repo đã được chuyển sang private,
+file bị xóa khỏi mọi commit bằng `git filter-repo`, rồi repo cũ bị xóa và tạo
+lại cùng tên. Phải xóa repo vì GitHub vẫn giữ commit cũ trong ref ẩn của các PR
+dù lịch sử đã được viết lại.
+
+Vì vậy, hash commit đã đổi và các trang PR #1–#5, issue #4 cũ không còn. Số PR
+trong tiêu đề commit là số ở repo cũ, nội dung được lưu ở
+`notes/github-archive.md`. Những bản đã được sao chép khi repo còn public thì
+không thu hồi được. Từ nay `data/final/` chỉ lưu ở máy, quy định chi tiết nằm
+trong `AGENTS.md`.
