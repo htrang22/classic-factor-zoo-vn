@@ -92,7 +92,7 @@ Mỗi lần chạy, các script xử lý lại toàn bộ dữ liệu và ghi đ
 
 **Giới hạn tái lập**
 
-- **Cần tài khoản SSI iBoard:** dữ liệu không được phân phối lại nên người chạy lại phải tự tải. `download_fundamentals.py` thay phần tải tay, nhưng vẫn cần tài khoản, tự đăng nhập và thêm widget một lần.
+- **Cần tài khoản SSI iBoard:** dữ liệu không được phân phối lại nên người chạy lại phải tự tải. `download_fundamentals.py` thay phần tải tay, nhưng vẫn cần tài khoản, tự đăng nhập và thêm widget một lần. Người dùng dùng tài khoản của chính mình và tự chịu trách nhiệm theo điều khoản SSI.
 - **Kết quả đổi theo ngày chạy:** mặc định, `download_stocks.py` lấy 8 năm tính đến hôm nay và `download_fundamentals.py` lấy năm hiện tại cùng năm đó trừ 4. Dùng `--start`, `--end` và `--years` để cố định giai đoạn, nhưng nguồn dữ liệu vẫn có thể điều chỉnh số cũ (giá điều chỉnh theo cổ tức, BCTC điều chỉnh), và bản vnstock cộng đồng chỉ lấy tối đa 8 năm.
 - **Phụ thuộc giao diện SSI:** script tìm nút theo chữ tiếng Việt và cấu trúc trang, nên có thể hỏng khi SSI đổi giao diện. Khi đó script dừng và báo lỗi. Vẫn có thể tải tay từ widget, giữ nguyên tên file SSI rồi chạy tiếp từ `parse_fundamentals.py`.
 
