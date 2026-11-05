@@ -45,12 +45,21 @@ data/
 | 0 | Thu thập dữ liệu: giá, VN-Index, BCTC quý cho 50 mã | ✅ Xong | `download_stocks.py`, `download_fundamentals.py`, `parse_fundamentals.py` |
 | 1 | Làm sạch data, xử lý cổ phiếu bị đình chỉ/hủy niêm yết (survivorship bias) | ⏳ Chưa làm | – |
 | 2 | Tính 10-20 factor đơn lẻ | ✅ Xong (21 factor) | `compute_factors.py` |
-| 3 | Sắp xếp cổ phiếu vào nhóm (quantile) theo từng factor, tính lợi suất từng nhóm | ⏳ Chưa làm | – |
+| 3 | Sắp xếp cổ phiếu vào nhóm (quintile) theo từng factor, tính lợi suất từng nhóm | ⏳ Chưa làm | – |
 | 4 | Đánh giá: IC (Spearman rank correlation giữa factor và lợi suất kỳ sau), spread long-short, t-stat | ⏳ Chưa làm | – |
 | 5 | Kiểm định bằng hồi quy Fama-MacBeth | ⏳ Chưa làm | – |
 
-- **Bước 2:** 21 factor theo 7 nhóm: Size (`mcap`, `log_mcap`), Value (`bm`, `ep`, `sp`, `cfp`), Momentum (`mom_12_1`, `mom_6_1`, `ret_1m`), Low-risk (`beta_12m`, `vol_3m`, `ivol_3m`, `max_ret_1m`), thanh khoản (`amihud_3m`, `turnover_3m`), Quality (`roe`, `roa`, `gross_profitability`, `leverage`, `accruals`, `earnings_growth`), Investment (`asset_growth`). Biến mục tiêu: `ret_fwd_1m` (lợi suất tháng sau).
-- **Bước 3:** với 50 mã, chia 3–5 nhóm (tercile/quintile) thay vì 10 nhóm, để mỗi nhóm có đủ số mã.
+**Bước 2:** 21 factor theo 7 nhóm:
+  1. Size (`mcap`, `log_mcap`),
+  2. Value (`bm`, `ep`, `sp`, `cfp`);
+  3. Momentum (`mom_12_1`, `mom_6_1`, `ret_1m`)
+  4. Low-risk (`beta_12m`, `vol_3m`, `ivol_3m`, `max_ret_1m`),
+  5. Thanh khoản (`amihud_3m`, `turnover_3m`),
+  6. Quality (`roe`, `roa`, `gross_profitability`, `leverage`, `accruals`, `earnings_growth`),
+  7. Investment (`asset_growth`).
+Biến mục tiêu: `ret_fwd_1m` (lợi suất tháng sau).
+
+**Bước 3:** với 50 mã, chia 3–5 nhóm (tercile/quintile) thay vì 10 nhóm, để mỗi nhóm có đủ số mã.
 
 **Thiết lập SSI iBoard (làm một lần, cho `download_fundamentals.py`)**
 
