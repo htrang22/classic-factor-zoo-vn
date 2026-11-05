@@ -90,6 +90,12 @@ python3 compute_factors.py      # tính panel factor -> data/final/factor_panel.
 
 Mỗi lần chạy, các script xử lý lại toàn bộ dữ liệu và ghi đè file đầu ra.
 
+**Giới hạn tái lập**
+
+- **Cần tài khoản SSI iBoard:** dữ liệu không được phân phối lại nên người chạy lại phải tự tải. `download_fundamentals.py` thay phần tải tay, nhưng vẫn cần tài khoản, tự đăng nhập và thêm widget một lần.
+- **Kết quả đổi theo ngày chạy:** mặc định, `download_stocks.py` lấy 8 năm tính đến hôm nay và `download_fundamentals.py` lấy năm hiện tại cùng năm đó trừ 4. Dùng `--start`, `--end` và `--years` để cố định giai đoạn, nhưng nguồn dữ liệu vẫn có thể điều chỉnh số cũ (giá điều chỉnh theo cổ tức, BCTC điều chỉnh), và bản vnstock cộng đồng chỉ lấy tối đa 8 năm.
+- **Phụ thuộc giao diện SSI:** script tìm nút theo chữ tiếng Việt và cấu trúc trang, nên có thể hỏng khi SSI đổi giao diện. Khi đó script dừng và báo lỗi. Vẫn có thể tải tay từ widget, giữ nguyên tên file SSI rồi chạy tiếp từ `parse_fundamentals.py`.
+
 ## Output:
 
 1. Bảng tổng hợp: IC trung bình, IC IR, Sharpe long-short của từng factor
