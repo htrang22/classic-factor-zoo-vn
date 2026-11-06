@@ -1,6 +1,6 @@
 # Nhật ký dự án: Factor Zoo cổ điển trên thị trường Việt Nam
 
-> Cập nhật lần cuối: 05/11/2026. Branch: `expand-universe-50`.
+> Cập nhật lần cuối: 06/11/2026. Branch: `survivorship-check`.
 
 ---
 
@@ -8,76 +8,78 @@
 
 ### 1.1 Danh sách mã (50 mã: 42 HOSE + 8 HNX)
 
-| Mã | Sàn | Ngành | BCTC quý |
-|---|---|---|---|
-| VCB | HOSE | Ngân hàng | ✅ |
-| BID | HOSE | Ngân hàng | ✅ |
-| CTG | HOSE | Ngân hàng | ✅ |
-| TCB | HOSE | Ngân hàng | ✅ |
-| MBB | HOSE | Ngân hàng | ✅ |
-| ACB | HOSE | Ngân hàng | ✅ |
-| VPB | HOSE | Ngân hàng | ✅ |
-| VIC | HOSE | Bất động sản | ✅ |
-| VHM | HOSE | Bất động sản | ✅ |
-| KDH | HOSE | Bất động sản | ✅ |
-| DXG | HOSE | Bất động sản | ✅ |
-| VNM | HOSE | Tiêu dùng | ✅ |
-| MSN | HOSE | Tiêu dùng | ✅ |
-| SAB | HOSE | Tiêu dùng | ✅ |
-| MWG | HOSE | Bán lẻ | ✅ |
-| PNJ | HOSE | Bán lẻ | ✅ |
-| HPG | HOSE | Thép | ✅ |
-| HSG | HOSE | Thép | ✅ |
-| DGC | HOSE | Hóa chất | ✅ |
-| GAS | HOSE | Năng lượng | ✅ |
-| PLX | HOSE | Năng lượng | ✅ |
-| REE | HOSE | Tiện ích | ✅ |
-| GMD | HOSE | Cảng biển | ✅ |
-| FPT | HOSE | Công nghệ | ✅ |
-| SSI | HOSE | Chứng khoán | ✅ |
-| SHS | HNX | Chứng khoán | ✅ |
-| MBS | HNX | Chứng khoán | ✅ |
-| PVS | HNX | Năng lượng | ✅ |
-| IDC | HNX | Bất động sản KCN | ✅ |
-| CEO | HNX | Bất động sản | ✅ |
-| STB | HOSE | Ngân hàng | ✅ |
-| HDB | HOSE | Ngân hàng | ✅ |
-| TPB | HOSE | Ngân hàng | ✅ |
-| EIB | HOSE | Ngân hàng | ✅ |
-| VND | HOSE | Chứng khoán | ✅ |
-| HCM | HOSE | Chứng khoán | ✅ |
-| NLG | HOSE | Bất động sản | ✅ |
-| KBC | HOSE | Bất động sản KCN | ✅ |
-| VJC | HOSE | Hàng không | ✅ |
-| DPM | HOSE | Phân bón | ✅ |
-| DHG | HOSE | Dược phẩm | ✅ |
-| VHC | HOSE | Thủy sản | ✅ |
-| CTD | HOSE | Xây dựng | ✅ |
-| PC1 | HOSE | Xây lắp điện | ✅ |
-| PVD | HOSE | Dịch vụ dầu khí | ✅ |
-| BMP | HOSE | Nhựa | ✅ |
-| DRC | HOSE | Cao su | ✅ |
-| VCS | HNX | Vật liệu xây dựng | ✅ |
-| TNG | HNX | Dệt may | ✅ |
-| PLC | HNX | Hóa chất | ✅ |
+| STT | Mã | Sàn | Ngành | BCTC quý |
+|---|---|---|---|---|
+| 1 | ACB | HOSE | Ngân hàng | ✅ |
+| 2 | BID | HOSE | Ngân hàng | ✅ |
+| 3 | CTG | HOSE | Ngân hàng | ✅ |
+| 4 | EIB | HOSE | Ngân hàng | ✅ |
+| 5 | HDB | HOSE | Ngân hàng | ✅ |
+| 6 | MBB | HOSE | Ngân hàng | ✅ |
+| 7 | STB | HOSE | Ngân hàng | ✅ |
+| 8 | TCB | HOSE | Ngân hàng | ✅ |
+| 9 | TPB | HOSE | Ngân hàng | ✅ |
+| 10 | VCB | HOSE | Ngân hàng | ✅ |
+| 11 | VPB | HOSE | Ngân hàng | ✅ |
+| 12 | CEO | HNX | Bất động sản | ✅ |
+| 13 | DXG | HOSE | Bất động sản | ✅ |
+| 14 | KDH | HOSE | Bất động sản | ✅ |
+| 15 | NLG | HOSE | Bất động sản | ✅ |
+| 16 | VHM | HOSE | Bất động sản | ✅ |
+| 17 | VIC | HOSE | Bất động sản | ✅ |
+| 18 | HCM | HOSE | Chứng khoán | ✅ |
+| 19 | MBS | HNX | Chứng khoán | ✅ |
+| 20 | SHS | HNX | Chứng khoán | ✅ |
+| 21 | SSI | HOSE | Chứng khoán | ✅ |
+| 22 | VND | HOSE | Chứng khoán | ✅ |
+| 23 | GAS | HOSE | Năng lượng | ✅ |
+| 24 | PLX | HOSE | Năng lượng | ✅ |
+| 25 | PVS | HNX | Năng lượng | ✅ |
+| 26 | MSN | HOSE | Tiêu dùng | ✅ |
+| 27 | SAB | HOSE | Tiêu dùng | ✅ |
+| 28 | VNM | HOSE | Tiêu dùng | ✅ |
+| 29 | MWG | HOSE | Bán lẻ | ✅ |
+| 30 | PNJ | HOSE | Bán lẻ | ✅ |
+| 31 | IDC | HNX | Bất động sản KCN | ✅ |
+| 32 | KBC | HOSE | Bất động sản KCN | ✅ |
+| 33 | DGC | HOSE | Hóa chất | ✅ |
+| 34 | PLC | HNX | Hóa chất | ✅ |
+| 35 | HPG | HOSE | Thép | ✅ |
+| 36 | HSG | HOSE | Thép | ✅ |
+| 37 | BMP | HOSE | Nhựa | ✅ |
+| 38 | CTD | HOSE | Xây dựng | ✅ |
+| 39 | DHG | HOSE | Dược phẩm | ✅ |
+| 40 | DPM | HOSE | Phân bón | ✅ |
+| 41 | DRC | HOSE | Cao su | ✅ |
+| 42 | FPT | HOSE | Công nghệ | ✅ |
+| 43 | GMD | HOSE | Cảng biển | ✅ |
+| 44 | PC1 | HOSE | Xây lắp điện | ✅ |
+| 45 | PVD | HOSE | Dịch vụ dầu khí | ✅ |
+| 46 | REE | HOSE | Tiện ích | ✅ |
+| 47 | TNG | HNX | Dệt may | ✅ |
+| 48 | VCS | HNX | Vật liệu xây dựng | ✅ |
+| 49 | VHC | HOSE | Thủy sản | ✅ |
+| 50 | VJC | HOSE | Hàng không | ✅ |
 
 Benchmark: **VN-Index** (`VNINDEX`).
 
 Tiêu chí chọn: trải đều vốn hóa lớn/vừa/nhỏ và nhiều ngành để các factor
-(nhất là Size, Value) có độ phân tán. Danh sách chọn theo thời điểm hiện tại
-→ **còn survivorship bias**, chưa xử lý.
+(nhất là Size, Value) có độ phân tán, với tỷ lệ ~85% HOSE và ~1/3 là ngân hàng +
+chứng khoán. Không chọn mã bảo hiểm. Danh sách chọn theo thời điểm hiện tại
+→ **còn survivorship bias**, mới đo độ nhạy (mục 3), chưa xử lý trong rổ.
 
-Mở rộng 30 → 50 mã (05/11/2026): thêm 20 mã (từ STB đến PLC trong bảng trên),
-giữ tỷ lệ của rổ cũ (~85% HOSE, ~1/3 là ngân hàng + chứng khoán), thêm các ngành
-chưa có (hàng không, phân bón, dược, thủy sản, xây dựng, nhựa, cao su, dệt may,
-vật liệu xây dựng) và thêm mã vốn hóa nhỏ (DRC, TNG, PLC, CTD). Không chọn mã
-bảo hiểm vì BCTC bảo hiểm là mẫu thứ tư, `compute_factors.py` chưa ánh xạ.
+Mở rộng 30 → 50 mã (05/11/2026): thêm 20 mã (STB, HDB, TPB, EIB, VND, HCM, NLG,
+KBC, VJC, DPM, DHG, VHC, CTD, PC1, PVD, BMP, DRC, VCS, TNG, PLC), giữ tỷ lệ của
+rổ cũ, thêm các ngành chưa có (hàng không, phân bón, dược, thủy sản, xây dựng,
+nhựa, cao su, dệt may, vật liệu xây dựng) và thêm mã vốn hóa nhỏ (DRC, TNG, PLC,
+CTD).
 
 ### 1.2 Nguồn dữ liệu
 
 | Loại | Nguồn | Script |
 |---|---|---|
 | Giá OHLCV ngày (50 mã + VN-Index) | vnstock, nguồn KBS (bản cộng đồng) | `download_stocks.py` |
+| Giá OHLCV ngày (34 mã đã hủy niêm yết) | vnstock, nguồn KBS (bản cộng đồng) | `survivorship_check.py` |
 | Danh sách mã, sàn, ngành | Tự định nghĩa trong `download_stocks.py` | `download_stocks.py` |
 | BCTC quý (CĐKT, KQKD, LCTT) | SSI iBoard, dữ liệu FiinTrade (file Excel, tải tự động bằng Playwright) | `download_fundamentals.py`, `parse_fundamentals.py` |
 | Panel factor tháng | Tính từ hai nguồn trên | `compute_factors.py` |
@@ -85,36 +87,24 @@ bảo hiểm vì BCTC bảo hiểm là mẫu thứ tư, `compute_factors.py` ch�
 ### 1.3 Mô tả chung
 
 **Giá (vnstock / KBS)**
-- Giai đoạn: 06/11/2018 → 04/11/2026. Mỗi mã khoảng 1.990 phiên; IDC 1.973,
-  DGC 1.989, ACB 1.990, VND 1.990, PLC 1.980 (thiếu vài phiên, có thể do
-  tạm ngừng giao dịch).
+- Giai đoạn: 8 năm từ 06/11/2018 → 04/11/2026. 45 mã có 1.995–1.996 phiên; IDC 1.973,
+  PLC 1.980, DGC 1.989, ACB 1.990, VND 1.990.
 - Cột: `time, open, high, low, close, volume`. Giá tính bằng **nghìn đồng**.
-- Giá **đã điều chỉnh** cổ tức/chia tách (vd FPT năm 2018 ≈ 12). Đây là suy
-  luận từ số liệu, chưa đối chiếu với nguồn khác.
-- Bản cộng đồng giới hạn dữ liệu 1D tối đa **8 năm**.
+- Giá **đã điều chỉnh** cổ tức/chia tách.
 
 **BCTC quý (SSI / FiinTrade)**
 - Đầy đủ **50/50 mã**
-- Mỗi mã có 3 loại báo cáo × 2 file (mỗi lần xuất tối đa 15 quý). Ghép lại
-  được **30 quý liên tục từ 2019Q2 đến 2026Q3**, không thiếu quý.
-- Số liệu tính bằng **đồng**, theo **từng quý** (không cộng dồn từ đầu năm).
-- Không có **ngày công bố** → point-in-time dùng độ trễ giả định 45 ngày.
+- Mỗi mã có 3 loại báo cáo cho 30 quý liên tục từ **2019 Q2 đến 2026 Q3**.
+- Số liệu tính bằng **đồng**.
+- Không có **ngày công bố**, dùng độ trễ giả định 45 ngày.
 - Có 3 mẫu BCTC, số chỉ tiêu (CĐKT/KQKD/LCTT) khác nhau:
   - **Ngân hàng** (11 mã: VCB, BID, CTG, TCB, MBB, ACB, VPB, STB, HDB, TPB, EIB): 48/27/52.
   - **Công ty chứng khoán** (5 mã: SSI, SHS, MBS, VND, HCM): 161/85/98.
   - **Doanh nghiệp thường** (34 mã còn lại): 120 chỉ tiêu ở bảng cân đối.
 - Một số chỉ tiêu trùng tên (ròng/gộp), nên phân biệt bằng `line_no`.
-- Cột EPS bằng 0 ở mọi quý (lỗi nguồn)
-- Tải tự động: `download_fundamentals.py` điều khiển widget "Báo cáo tài chính"
-  trên SSI iBoard (Quý, 15 kỳ, Năm gần nhất 2026 và 2022). Kiểm tra với DGC:
-  khớp 100% với file tải tay.
-- Môi trường: numpy < 2.3.2 hỏng trên Python 3.14 với mảng > 256 KB (lỗi
-  `IndexError` khi sort); đã nâng lên numpy 2.3.5. Panel 30 mã cũ tính lại
-  trùng khớp hoàn toàn, nên kết quả trước đó không bị ảnh hưởng.
 
 **Panel factor (`data/final/factor_panel.csv`, chỉ lưu ở máy)**
-- 4.800 dòng = 50 mã × 96 tháng, từ 11/2018 đến 10/2026 (bỏ tháng 11/2026
-  vì chưa kết thúc).
+- 4.800 dòng = 50 mã × 96 tháng, từ 11/2018 đến 10/2026.
 - 32 cột: 11 cột định danh/lợi suất + 21 chỉ số factor.
 ---
 
@@ -176,7 +166,7 @@ doanh nghiệp thường.
 | **Value** | `bm` | `book_equity / mcap` | Book-to-market, FF HML |
 | | `ep` | `NI_TTM / mcap` | Earnings yield (nghịch đảo P/E) |
 | | `sp` | `Rev_TTM / mcap` | Sales-to-price |
-| | `cfp` | `CFO_TTM / mcap` | Chỉ doanh nghiệp thường (`is_financial` = trống) |
+| | `cfp` | `CFO_TTM / mcap` | Chỉ doanh nghiệp thường (trống khi `is_financial` = True) |
 | **Momentum** | `mom_12_1` | `P_{t−1} / P_{t−12} − 1` | Carhart; bỏ tháng gần nhất |
 | | `mom_6_1` | `P_{t−1} / P_{t−6} − 1` | Momentum trung hạn |
 | | `ret_1m` | `P_t / P_{t−1} − 1` | Dùng làm factor short-term reversal |
@@ -186,30 +176,31 @@ doanh nghiệp thường.
 | | `max_ret_1m` | `max(r_d)` trong tháng | Hiệu ứng "xổ số" (MAX) |
 | **Thanh khoản** | `amihud_3m` | `mean(|r_d| / (P_d × 1.000 × Volume_d)) × 10⁹`, 63 phiên | Amihud illiquidity |
 | | `turnover_3m` | `mean(Volume_d, 63 phiên) / shares_mới_nhất` | Vòng quay cổ phiếu |
-| **Quality / Profitability** | `roe` | `NI_TTM / ((BE_q + BE_{q−4}) / 2)` | Cần 8 quý → có từ 2020Q1 |
+| **Quality / Profitability** | `roe` | `NI_TTM / ((BE_q + BE_{q−4}) / 2)` | Cần 5 quý → có từ 2020Q2 |
 | | `roa` | `NI_TTM / TA_q` | |
 | | `gross_profitability` | `GP_TTM / TA_q` | Novy-Marx; chỉ doanh nghiệp thường |
 | | `leverage` | `TL_q / TA_q` | QMJ – safety |
-| | `accruals` | `(NI_TTM − CFO_TTM) / TA_q` | Sloan; chỉ doanh nghiệp thường (`is_financial` = trống) |
+| | `accruals` | `(NI_TTM − CFO_TTM) / TA_q` | Sloan; chỉ doanh nghiệp thường (trống khi `is_financial` = True) |
 | | `earnings_growth` | `(NI_TTM − NI_TTM,q−4) / |NI_TTM,q−4|` | QMJ – growth |
 | **Investment** | `asset_growth` | `TA_q / TA_{q−4} − 1` | FF5 CMA |
 
-Tổng cộng **21 chỉ số factor**.
+Tổng cộng **22 chỉ số factor**.
 
 ---
 
-## 3. Xóa và tạo lại repo (11/2026)
+## 3. Kiểm tra survivorship bias
 
-Trong khoảng 04–05/11/2026, repo public có chứa `data/final/factor_panel.csv`.
-File này không chứa giá gốc, nhưng từ `ret_1m`, `mcap` và các tỷ lệ như `bm`,
-`ep`, `sp`, `cfp` có thể dựng lại đường giá và số liệu BCTC. Dữ liệu vnstock và
-FiinTrade không có quyền phân phối lại, nên repo đã được chuyển sang private,
-file bị xóa khỏi mọi commit bằng `git filter-repo`, rồi repo cũ bị xóa và tạo
-lại cùng tên. Phải xóa repo vì GitHub vẫn giữ commit cũ trong ref ẩn của các PR
-dù lịch sử đã được viết lại.
+`survivorship_check.py` đo độ nhạy của các factor dùng giá với survivorship bias.
+Script so sánh rổ 50 mã với rổ có thêm 34 mã bị hủy niêm yết bắt buộc trên
+HOSE/HNX, cho 8 factor: `mom_12_1`, `mom_6_1`, `ret_1m`, `beta_12m`, `vol_3m`,
+`ivol_3m`, `max_ret_1m`, `amihud_3m`. Các factor còn lại không được kiểm tra vì
+cần BCTC hoặc số cổ phiếu.
 
-Vì vậy, hash commit đã đổi và các trang PR #1–#5, issue #4 cũ không còn. Số PR
-trong tiêu đề commit là số ở repo cũ, nội dung được lưu ở
-`notes/github-archive.md`. Những bản đã được sao chép khi repo còn public thì
-không thu hồi được. Từ nay `data/final/` chỉ lưu ở máy, quy định chi tiết nằm
-trong `AGENTS.md`.
+- Danh sách 34 mã: ACM, AMD, APP, ART, C92, DAG, FLC, FTM, GAB, GMC, HAI, HBC, HHG, HNG, HOT, HPM, LCS, MCG, PDC, PHP, PVL, PXI, PXS, QBS, RIC, ROS, SD2, TNA, TST, TTB, UDC, VIE, VKC, VXB.
+- Giá các mã này lưu ở `data/raw/delisted/`, chỉ ở máy.
+- Kết quả tổng hợp lưu ở `results/`:
+  - `survivorship_check.csv`: IC và spread theo factor và kịch bản lợi suất hủy niêm yết.
+  - `survivorship_levels.csv`: lợi suất đều trọng số của hai rổ.
+  - `survivorship_draws.csv`: chênh lệch khi chỉ thêm 7 mã chết ngẫu nhiên.
+  - Các file `*_min0.csv`: cùng nội dung, không lọc số phiên tối thiểu trong tháng.
+
