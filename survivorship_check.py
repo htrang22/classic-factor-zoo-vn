@@ -39,9 +39,7 @@ from download_stocks import (
 DELISTED_DIR = RAW_DIR / "delisted"
 RESULT_DIR = PROJECT_DIR / "results"
 
-# Mã bị hủy niêm yết bắt buộc trên HOSE/HNX, tổng hợp từ báo chí 2022-2025. Danh
-# sách KHÔNG đầy đủ: các nguồn đều chỉ liệt kê một phần. Chưa đưa vào vì chưa xác
-# nhận được: HU3, THI, POM, SJF, VIS.
+# Mã bị hủy niêm yết bắt buộc trên HOSE/HNX, tổng hợp từ báo chí 2022-2025.
 DELISTED = [
     # Họ FLC
     "FLC", "ROS", "HAI", "ART", "AMD", "GAB",
