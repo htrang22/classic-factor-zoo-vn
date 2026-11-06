@@ -184,7 +184,7 @@ doanh nghiệp thường.
 | | `earnings_growth` | `(NI_TTM − NI_TTM,q−4) / |NI_TTM,q−4|` | QMJ – growth |
 | **Investment** | `asset_growth` | `TA_q / TA_{q−4} − 1` | FF5 CMA |
 
-Tổng cộng **21 chỉ số factor**, chưa tính `ret_1m` (đã có ở mục 2.2).
+Tổng cộng **22 chỉ số factor**.
 
 ---
 
@@ -204,14 +204,3 @@ cần BCTC hoặc số cổ phiếu.
   - `survivorship_draws.csv`: chênh lệch khi chỉ thêm 7 mã chết ngẫu nhiên.
   - Các file `*_min0.csv`: cùng nội dung, không lọc số phiên tối thiểu trong tháng.
 
-```bash
-python3 survivorship_check.py --download
-```
-
-```bash
-python3 survivorship_check.py
-```
-
-```bash
-python3 survivorship_check.py --min-days 0
-```
