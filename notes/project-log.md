@@ -1,6 +1,6 @@
 # Nhật ký dự án: Factor Zoo cổ điển trên thị trường Việt Nam
 
-> Cập nhật lần cuối: 06/11/2026. Branch: `survivorship-check`.
+> Cập nhật lần cuối: 09/11/2026. Branch: `factor-evaluation`.
 
 ---
 
@@ -105,7 +105,8 @@ CTD).
 
 **Panel factor (`data/final/factor_panel.csv`, chỉ lưu ở máy)**
 - 4.800 dòng = 50 mã × 96 tháng, từ 11/2018 đến 10/2026.
-- 32 cột: 11 cột định danh/lợi suất + 21 chỉ số factor.
+- 32 cột: 11 cột định danh/lợi suất + 21 cột factor. `ret_1m` nằm trong 11 cột đầu
+  và cũng là factor reversal, nên tổng cộng có 22 chỉ số factor (mục 2.3).
 ---
 
 ## 2. Các factor đã tính
@@ -203,4 +204,92 @@ cần BCTC hoặc số cổ phiếu.
   - `survivorship_levels.csv`: lợi suất đều trọng số của hai rổ.
   - `survivorship_draws.csv`: chênh lệch khi chỉ thêm 7 mã chết ngẫu nhiên.
   - Các file `*_min0.csv`: cùng nội dung, không lọc số phiên tối thiểu trong tháng.
+
+---
+
+## 4. Chia nhóm và đánh giá factor (bước 3–4)
+
+`evaluate_factors.py` đánh giá 21 factor. `mcap` bị bỏ vì cùng thứ hạng với `log_mcap`.
+Mọi kết quả là **trước chi phí giao dịch**, trên rổ 50 mã chọn theo năm 2026.
+
+### 4.1 Cách làm
+
+- Mỗi cuối tháng, chia mã thành 5 nhóm đều trọng số theo factor nhân với hướng kỳ
+  vọng, rồi đo `ret_fwd_1m`. Q5 là nhóm kỳ vọng cao, nên số dương là đúng hướng.
+- Tháng có dưới 25 mã bị bỏ, mã dưới 10 phiên trong tháng không được xếp. Với 50 mã
+  hiện tại, bộ lọc phiên không loại dòng nào.
+- Hai cách chia: `raw` xếp chung cả rổ; `neutral` xếp riêng trong từng mẫu BCTC rồi gộp.
+  `cfp`, `accruals`, `gross_profitability` chỉ có doanh nghiệp thường nên hai cách trùng nhau.
+- Thống kê t dùng sai số chuẩn Newey-West, 3 độ trễ với độ dài mẫu hiện tại.
+- Đa kiểm định: hoán vị lợi suất giữa các mã trong từng tháng, 2.000 lần, rồi lấy
+  max|t| trên 21 factor. Ban đầu dùng Holm theo phân phối chuẩn nhưng đã bỏ: với factor
+  nhiễu thuần, |t| ≥ 3,39 xảy ra 0,6% số lần, so với khoảng 0,07% theo phân phối chuẩn.
+
+### 4.2 Kết quả
+
+Kết quả đầy đủ ở `results/factor_summary.csv`, `results/factor_quintiles.csv`,
+`results/factor_spreads.png` và `results/factor_cumulative.png`.
+
+Bản `neutral`, cửa sổ `full`. Spread tính bằng %/tháng; Sharpe là Sharpe năm của long-short.
+Ngưỡng max|t| ở mức 5% là 3,26.
+
+| Factor | Số tháng | IC | t(IC) | Spread | t(spread) | Sharpe | p max-t |
+|---|---|---|---|---|---|---|---|
+| `log_mcap` | 95 | 0,037 | 1,58 | 1,31 | 1,96 | 0,70 | 0,69 |
+| `bm` | 86 | 0,077 | 2,86 | 2,46 | 3,39 | 1,36 | 0,035 |
+| `ep` | 77 | 0,051 | 2,62 | 0,23 | 0,30 | 0,13 | 1,00 |
+| `sp` | 77 | 0,062 | 3,34 | 0,83 | 1,24 | 0,47 | 0,98 |
+| `cfp` | 77 | 0,066 | 2,77 | 1,20 | 1,21 | 0,53 | 0,99 |
+| `mom_12_1` | 83 | 0,006 | 0,26 | 0,37 | 0,59 | 0,22 | 1,00 |
+| `mom_6_1` | 89 | 0,008 | 0,50 | 0,02 | 0,03 | 0,01 | 1,00 |
+| `ret_1m` | 94 | 0,004 | 0,27 | −0,02 | −0,05 | −0,01 | 1,00 |
+| `beta_12m` | 89 | 0,001 | 0,06 | −0,64 | −0,75 | −0,29 | 1,00 |
+| `vol_3m` | 93 | −0,009 | −0,40 | −1,23 | −1,70 | −0,60 | 0,86 |
+| `ivol_3m` | 93 | 0,007 | 0,32 | −0,92 | −1,22 | −0,46 | 0,99 |
+| `max_ret_1m` | 95 | 0,019 | 1,16 | 0,11 | 0,18 | 0,07 | 1,00 |
+| `amihud_3m` | 93 | 0,022 | 1,33 | 1,02 | 1,66 | 0,73 | 0,87 |
+| `turnover_3m` | 93 | 0,002 | 0,07 | −0,15 | −0,20 | −0,07 | 1,00 |
+| `roe` | 74 | 0,002 | 0,08 | −0,92 | −1,12 | −0,50 | 0,99 |
+| `roa` | 77 | −0,006 | −0,30 | −1,33 | −1,64 | −0,71 | 0,88 |
+| `gross_profitability` | 77 | −0,029 | −1,03 | −2,22 | −1,86 | −0,85 | 0,77 |
+| `leverage` | 86 | −0,010 | −0,65 | −0,59 | −1,25 | −0,52 | 0,98 |
+| `accruals` | 77 | 0,069 | 3,56 | 1,08 | 1,72 | 0,68 | 0,85 |
+| `earnings_growth` | 65 | −0,011 | −0,63 | −0,05 | −0,07 | −0,03 | 1,00 |
+| `asset_growth` | 74 | −0,020 | −1,12 | −0,62 | −0,85 | −0,35 | 1,00 |
+
+Độ bền của `bm` (spread %/tháng, trong ngoặc là t Newey-West):
+
+| Cửa sổ | `raw` | `neutral` |
+|---|---|---|
+| `full` | 2,11 (3,16) | 2,46 (3,39) |
+| `common`, 65 tháng từ 05/2021 | 1,74 (2,53) | 1,88 (2,43) |
+| `first_half`, trước 03/2023 | 2,94 (2,87) | 3,85 (3,59) |
+| `second_half`, từ 03/2023 | 1,28 (1,75) | 1,07 (1,49) |
+| `ex_covid`, bỏ 03/2020–06/2021 | 1,66 (2,37) | 1,75 (2,34) |
+
+### 4.3 Cách đọc
+
+- **Chỉ `bm` vượt ngưỡng đa kiểm định, và chỉ ở một đặc tả.** Bản `neutral` cửa sổ `full`
+  có p max-t 0,035, bản `raw` là 0,062. Ở cửa sổ `common`, p max-t là 0,31–0,34. Tín hiệu
+  vẫn cùng hướng ở mọi cửa sổ, nhưng yếu đi rõ ở nửa sau của mẫu.
+- **Chưa thể gọi `bm` là premium đã xác nhận.** Rổ chọn theo năm 2026 loại các mã rẻ đã
+  chết, nên Value có thể bị thổi phồng, và phép đo survivorship ở mục 3 chưa bao phủ factor
+  này vì mã chết không có BCTC. `bm` còn dựa trên vốn hóa xấp xỉ (mục 2.3).
+- **Không có bằng chứng cho Momentum.** Spread gần 0 và IC không có ý nghĩa thống kê.
+- **Phần lớn Low-risk và Quality có spread âm nhưng không vượt ngưỡng đa kiểm định.** Không
+  nên kết luận các factor này "chết": mẫu ngắn, và survivorship có thể làm lệch kết quả. Amihud
+  càng phải đọc cùng mục 3, vì spread của nó giảm mạnh khi thêm mã chết.
+- **IC và spread đôi khi không khớp.** `accruals` và `sp` có t(IC) trên 3 nhưng t(spread)
+  dưới 2, nên cần xem thêm ở hồi quy Fama-MacBeth.
+
+### 4.4 Hạn chế đã biết
+
+- **Vốn hóa:** `mcap` lấy giá điều chỉnh nhân số cổ phiếu mới nhất, tức dùng thông tin
+  tương lai, ảnh hưởng đến Size, Value và `turnover_3m`. Trung vị của số cổ phiếu mới nhất
+  so với số cổ phiếu tại quý đang dùng là 1,42 lần. Riêng tỷ lệ này cũng dự báo được lợi
+  suất (t khoảng 2,0–2,6), nên thay bằng số cổ phiếu theo quý không phải cách sửa đúng.
+  Muốn sửa cần giá chưa điều chỉnh, và mức lệch hiện chưa đo được. Hai con số này và phép
+  thử nhiễu ở mục 4.1 đến từ phép đo riêng, chưa có trong `evaluate_factors.py`.
+- **Đều trọng số:** chưa có bản theo trọng số vốn hóa, vì nó phụ thuộc biến vốn hóa trên.
+- **Cửa sổ `ex_covid`** là mốc tự chọn để kiểm tra độ bền, không phải mốc học thuật.
 

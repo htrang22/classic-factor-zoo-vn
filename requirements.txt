@@ -1,4 +1,5 @@
 pandas
+matplotlib  # plot_factors.py
 numpy>=2.3.2  # bản cũ hơn lỗi với mảng lớn trên Python 3.14
 --extra-index-url https://vnstocks.com/api/simple
 vnstock
