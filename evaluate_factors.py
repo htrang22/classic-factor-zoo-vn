@@ -22,7 +22,7 @@ chuẩn, vốn quá lạc quan với t Newey-West khi mẫu chỉ khoảng 80 th
 Đầu vào (chỉ ở máy):
     data/final/factor_panel.csv
 
-Đầu ra (chỉ gồm số tổng hợp qua nhiều mã, không chứa dữ liệu theo mã):
+Đầu ra:
     results/factor_summary.csv    (IC, IC IR, spread, Sharpe, t-stat theo factor)
     results/factor_quintiles.csv  (lợi suất trung bình từng nhóm)
     results/factor_spreads.png, results/factor_cumulative.png

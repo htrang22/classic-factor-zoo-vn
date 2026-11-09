@@ -105,8 +105,7 @@ CTD).
 
 **Panel factor (`data/final/factor_panel.csv`, chỉ lưu ở máy)**
 - 4.800 dòng = 50 mã × 96 tháng, từ 11/2018 đến 10/2026.
-- 32 cột: 11 cột định danh/lợi suất + 21 cột factor. `ret_1m` nằm trong 11 cột đầu
-  và cũng là factor reversal, nên tổng cộng có 22 chỉ số factor (mục 2.3).
+- 32 cột: 11 cột định danh/lợi suất + 22 cột factor.
 ---
 
 ## 2. Các factor đã tính
