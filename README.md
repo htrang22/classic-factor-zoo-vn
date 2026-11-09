@@ -43,7 +43,7 @@ data/
 | # | Bước | Trạng thái | Script |
 |---|---|---|---|
 | 0 | Thu thập dữ liệu: giá, VN-Index, BCTC quý cho 50 mã | ✅ Xong | `download_stocks.py`, `download_fundamentals.py`, `parse_fundamentals.py` |
-| 1 | Làm sạch data, xử lý cổ phiếu bị đình chỉ/hủy niêm yết (survivorship bias) | 🟡 Mới đo độ nhạy của 8 factor dùng giá, chưa xử lý trong rổ | `survivorship_check.py` |
+| 1 | Làm sạch data, xử lý cổ phiếu bị đình chỉ/hủy niêm yết (survivorship bias) | 🟡 Đo độ nhạy của 8 factor dùng giá, không xử lý các factor lấy chỉ số từ BCTC | `survivorship_check.py` |
 | 2 | Tính 10-20 factor đơn lẻ | ✅ Xong (22 chỉ số) | `compute_factors.py` |
 | 3 | Sắp xếp cổ phiếu vào nhóm (quintile) theo từng factor, tính lợi suất từng nhóm | ✅ Xong | `evaluate_factors.py` |
 | 4 | Đánh giá: IC (Spearman rank correlation giữa factor và lợi suất kỳ sau), spread long-short, t-stat | ✅ Xong, trước chi phí | `evaluate_factors.py`, `plot_factors.py` |
