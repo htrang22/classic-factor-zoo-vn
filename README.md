@@ -35,7 +35,7 @@ data/
 │   ├── fundamentals_long.csv      # chỉ ở máy
 │   └── fundamentals_coverage.csv  # số quý BCTC theo mã × loại báo cáo
 └── final/               # chỉ ở máy
-    └── factor_panel.csv # input của model: mã × cuối tháng, 21 factor
+    └── factor_panel.csv # input của model: mã × cuối tháng, 22 chỉ số factor
 ```
 
 ## Các bước:
@@ -43,13 +43,16 @@ data/
 | # | Bước | Trạng thái | Script |
 |---|---|---|---|
 | 0 | Thu thập dữ liệu: giá, VN-Index, BCTC quý cho 50 mã | ✅ Xong | `download_stocks.py`, `download_fundamentals.py`, `parse_fundamentals.py` |
-| 1 | Làm sạch data, xử lý cổ phiếu bị đình chỉ/hủy niêm yết (survivorship bias) | ⏳ Chưa làm | – |
-| 2 | Tính 10-20 factor đơn lẻ | ✅ Xong (21 factor) | `compute_factors.py` |
-| 3 | Sắp xếp cổ phiếu vào nhóm (quintile) theo từng factor, tính lợi suất từng nhóm | ⏳ Chưa làm | – |
-| 4 | Đánh giá: IC (Spearman rank correlation giữa factor và lợi suất kỳ sau), spread long-short, t-stat | ⏳ Chưa làm | – |
+| 1 | Làm sạch data, xử lý cổ phiếu bị đình chỉ/hủy niêm yết (survivorship bias) | 🟡 Đo độ nhạy của 8 factor dùng giá, không xử lý các factor lấy chỉ số từ BCTC | `survivorship_check.py` |
+| 2 | Tính 10-20 factor đơn lẻ | ✅ Xong (22 chỉ số) | `compute_factors.py` |
+| 3 | Sắp xếp cổ phiếu vào nhóm (quintile) theo từng factor, tính lợi suất từng nhóm | ✅ Xong | `evaluate_factors.py` |
+| 4 | Đánh giá: IC (Spearman rank correlation giữa factor và lợi suất kỳ sau), spread long-short, t-stat | ✅ Xong, trước chi phí | `evaluate_factors.py`, `plot_factors.py` |
 | 5 | Kiểm định bằng hồi quy Fama-MacBeth | ⏳ Chưa làm | – |
+| 6 | Tính chi phí giao dịch từ vòng quay danh mục | ⏳ Chưa làm | – |
 
-**Bước 2:** 21 factor theo 7 nhóm:
+Kết quả bước 3–4 và cách đọc ở mục 4 của `notes/project-log.md`.
+
+**Bước 2:** 22 chỉ số factor theo 7 nhóm:
   1. Size (`mcap`, `log_mcap`),
   2. Value (`bm`, `ep`, `sp`, `cfp`);
   3. Momentum (`mom_12_1`, `mom_6_1`, `ret_1m`)
@@ -86,6 +89,7 @@ python3 download_stocks.py      # tải giá 50 mã + VN-Index (gọi vnstock, c
 python3 download_fundamentals.py  # tải BCTC quý từ SSI iBoard (mở Chrome; lần đầu tự đăng nhập)
 python3 parse_fundamentals.py   # gộp file Excel BCTC trong data/raw/quarter-report/
 python3 compute_factors.py      # tính panel factor -> data/final/factor_panel.csv
+python3 evaluate_factors.py     # chia quintile, IC, spread, t-stat -> results/
 ```
 
 Mỗi lần chạy, các script xử lý lại toàn bộ dữ liệu và ghi đè file đầu ra.
@@ -99,5 +103,5 @@ Mỗi lần chạy, các script xử lý lại toàn bộ dữ liệu và ghi đ
 ## Output:
 
 1. Bảng tổng hợp: IC trung bình, IC IR, Sharpe long-short của từng factor
-2. Biểu đồ cumulative return theo decile
+2. Biểu đồ cumulative return theo quintile
 3. Báo cáo: factor nào hoạt động, factor nào “chết” ở VN và giải thích kinh tế

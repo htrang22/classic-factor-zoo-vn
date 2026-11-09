@@ -1,6 +1,6 @@
 # Lưu trữ PR và issue của repo cũ
 
-Bản sao nguyên văn mô tả PR #1, #2, #3, #5 và issue #4 của repo cũ, lưu lại trước khi xóa repo (xem mục 3 của `project-log.md`). Số PR và số issue là số ở repo cũ.
+Bản sao nguyên văn mô tả PR #1, #2, #3, #5 và issue #4 của repo cũ, lưu lại trước khi xóa repo (lý do xem phần Quyền dữ liệu trong `README.md`). Số PR và số issue là số ở repo cũ.
 
 ## PR #1: Data collection pipeline and monthly factor panel
 
